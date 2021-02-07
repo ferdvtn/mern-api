@@ -1,0 +1,3 @@
+node_modules
+# karena terkadang yarn.lock nya conflict
+yarn.lock
