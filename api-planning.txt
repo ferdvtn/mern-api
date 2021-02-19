@@ -1,0 +1,93 @@
+Standart API
+{root.api}/{version}/{grouping}/{endpoint}
+
+Standart Status Response
+200 - OK                    --> Call API Success
+201 - CREATED               --> Post Success
+400 - BAD REQUEST           --> Error on Client Side (ex: salah input, dll)
+401 - UNAUTHORIZED          --> User not authorized to the request
+403 - FORBIDDEN             --> User not allowed to access
+404 - NOT FOUND             --> Request endpoint Not Found
+500 - INTERNAL SERVER ERROR --> Error on Server Side
+502 - BAD GATEWAY           --> Invalid Response from another Request
+
+----------------
+
+GROUP: Authentication
+[1] - Register
+req:
+{
+    "name": "Ferd",
+    "email": "ferd@email.id",
+    "password": "1x2"
+}
+
+res:
+{
+    "message": "Register Success",
+    "data": {
+        "id": 1,
+        "name": "Ferd",
+        "email": "ferd@email.id",
+        "password": "1x2"
+    }
+}
+
+res-error:
+201 --> Register Berhasil.
+400 --> Input yang anda masukan tidak valid.
+
+[2] - Login
+req:
+{
+    "name": "Ferd",
+    "password": "1x2"
+}
+
+res:
+{
+    "message": "Login Success",
+    "data": {
+        id: 1,
+        "email": "ferd@email.id",
+        "password": "1x2"
+    }
+}
+
+res-error:
+400 --> Input yang anda masukan tidak valid.
+
+GROUP: Blog
+[1] - Create
+req:
+{
+    "title": "This is blog title",
+    "image": "blogImages.png",
+    "body": "lorem ipsum print bulk printing tes datas tug hild alucard",
+}
+
+res:
+{
+    "message": "Create blog post success",
+    "data": {
+        "post_id": 1,
+        "title": "This is blog title",
+        "image": "blogImage-on.png",
+        "body": "lorem ipsum print bulk printing tes datas tug hild alucard",
+        "created_at": "01/02/2021",
+        "creator": {
+            "uid": 1,
+            "name": "ferd"
+        }
+    }
+}
+
+res-error:
+201 --> Blog post berhasil dibuat.
+400 --> Input yang anda masukan tidak valid.
+
+[2] - Get
+[2] - Update
+[2] - Delete
+
+----------------
