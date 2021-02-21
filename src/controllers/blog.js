@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator")
+const BlogModel = require('../models/blog')
 
 exports.create = (req, res, next) => {
-    const { title, image='default.png', body } = req.body
     const errors = validationResult(req)
     if( ! errors.isEmpty()) {
         const err = new Error('Input value tidak valid')
@@ -10,19 +10,58 @@ exports.create = (req, res, next) => {
         throw err
     }
 
-    res.status(201).json({
-        message: "Create blog post success",
-        data: {
-            post_id: 1,
-            title: title,
-            image: image,
-            body: body,
-            created_at: "01/02/2021",
-            creator: {
-                uid: 1,
-                name: "ferd"
-            }
-        }
+    if (! req.file) {
+        const err = new Error('Input image tidak valid')
+        err.codeSt = 422;
+        throw err
+    }
+
+    const { title, body } = req.body
+    const posting = new BlogModel({
+        title: title,
+        body: body,
+        image: req.file.path,
+        author: {uid:'1', name: '_fer'}
     })
-    next()
+    
+    posting.save()
+    .then(response => {
+        res.status(201).json({
+            message: "Create blog post success",
+            data: response
+        })
+    })
+    .catch(err => console.log('Create blog post error', err))
+
+    // next() // gaboleh make next karena diatas udah return response
+}
+
+exports.getAll = (req, res, next) => {
+     BlogModel.find()
+     .then(result => {
+         res.status(200).json({
+             message: 'Berhasil mendapatkan data blog post',
+             data: result
+         })
+     })
+     .catch(error => next(err))
+}
+
+exports.getById = (req, res, next) => {
+    console.log('req.params : ', req.params);
+    BlogModel.findById(req.params.postId)
+    .then(result => {
+        if (! result) {
+            const error = new Error('Data id tidak ditemukan')
+            error.codeSt = 404
+            error.data = result
+            throw error
+        }
+
+        res.status(200).json({
+            message: 'Data id berhasil ditemukan',
+            data: result
+        })
+    })
+    .catch(err => next(err))
 }
