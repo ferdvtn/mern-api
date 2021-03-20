@@ -3,7 +3,6 @@ const app = express()
 const port = 4000
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const { body } = require('express-validator')
 const multer = require('multer')
 const path = require('path')
 
@@ -35,16 +34,9 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     next();
 })
-app.use('/image', express.static(path.join(__dirname, 'images')))
+app.use('/images', express.static(path.join(__dirname, 'images')))
 app.use('/v1/auth', authRoutes)
-app.use(
-    '/v1/blog',
-    [
-        body('title').isLength({min: 5}).withMessage('Input title tidak valid'),
-        body('body').isLength({min: 5}).withMessage('Input body tidak valid')
-    ],
-    blogRoutes
-)
+app.use('/v1/blog', blogRoutes)
 
 app.use((Error, req, res, next) => {
     const { codeSt=500, message, data } = Error 
